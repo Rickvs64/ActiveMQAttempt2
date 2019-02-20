@@ -24,7 +24,10 @@ public class ServerApp implements ISubscriber, Runnable {
     }
 
     private void initConnector() {
-        connector = new Connector(this, "ProductSearches");
+        List<String> channels = new ArrayList<String>();
+        channels.add("ProductSearches");
+
+        connector = new Connector(this, channels);
     }
 
     private void showIntro() {

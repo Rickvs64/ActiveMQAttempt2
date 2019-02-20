@@ -4,6 +4,7 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
+import java.util.List;
 
 public class Connector {
 
@@ -15,17 +16,17 @@ public class Connector {
     // Subscriber to notify upon receiving messages
     private ISubscriber subscriber;
 
-    public Connector(ISubscriber newSub, String listenChannel) {
+    public Connector(ISubscriber newSub, List<String> listenChannels) {
         try {
             subscriber = newSub;
-            connect(listenChannel);
+            connect(listenChannels);
         } catch (JMSException e) {
             e.printStackTrace();
         }
     }
 
     // Connect and set listen channel/topic
-    private void connect(String listenChannel) throws JMSException {
+    private void connect(List<String> listenChannels) throws JMSException {
         System.setProperty("org.apache.activemq.SERIALIZABLE_PACKAGES", "*");
 
         // Getting JMS connection from the server and starting it
@@ -36,24 +37,26 @@ public class Connector {
         // Creating a non transactional session to send/receive JMS message
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-        // This one is only used for LISTENING
-        Destination destination = session.createTopic(listenChannel);
+        // Create listeners for EACH given channel
+        for (String channel : listenChannels) {
+            // This one is only used for LISTENING
+            Destination destination = session.createTopic(channel);
 
-        // MessageConsumer is used for receiving (consuming) messages
-        MessageConsumer consumer = session.createConsumer(destination);
+            // MessageConsumer is used for receiving (consuming) messages
+            MessageConsumer consumer = session.createConsumer(destination);
 
-        consumer.setMessageListener(new MessageListener() {
+            consumer.setMessageListener(new MessageListener() {
 
-            @Override
-            public void onMessage(Message msg) {
-                try {
-                    receiveGenericMessage(msg);
-                } catch (JMSException e) {
-                    e.printStackTrace();
+                @Override
+                public void onMessage(Message msg) {
+                    try {
+                        receiveGenericMessage(msg);
+                    } catch (JMSException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
-
+            });
+        }
     }
 
     // Send message

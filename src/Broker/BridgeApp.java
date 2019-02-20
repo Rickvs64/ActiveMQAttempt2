@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class BrokerApp implements ISubscriber, Runnable {
+public class BridgeApp implements ISubscriber, Runnable {
 
     private String uniqueID = UUID.randomUUID().toString();
     private Connector connector;
@@ -39,18 +39,18 @@ public class BrokerApp implements ISubscriber, Runnable {
     }
 
     private void showIntro() {
-        System.out.println("BROKER app has been started.");
-        System.out.println("This app will function as a bridge between CLIENT (customer) and multiple SERVERS (shops)");
+        System.out.println("BRIDGE app has been started.");
+        System.out.println("This app will function as an additional layer  inbetween CLIENT (customer) and multiple SERVERS (shops)");
         System.out.println("############################");
         System.out.println();
     }
 
     private void initConnector() {
-        connector = new Connector(this, "ProductSearchesFromClient");
+        // connector = new Connector(this, "ProductSearchesFromClient");
     }
 
     public static void main(String[] args) {
-        Runnable runnable = new BrokerApp();
+        Runnable runnable = new BridgeApp();
         Thread thread = new Thread(runnable);
         thread.start();
     }

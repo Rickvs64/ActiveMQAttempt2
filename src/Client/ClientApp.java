@@ -3,6 +3,8 @@ package Client;
 import Shared.*;
 
 import javax.jms.JMSException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -22,7 +24,10 @@ public class ClientApp implements ISubscriber, Runnable {
     }
 
     private void initConnector() {
-        connector = new Connector(this, "ProductResults");
+        List<String> channels = new ArrayList<String>();
+        channels.add("ProductResults");
+
+        connector = new Connector(this, channels);
     }
 
     private void showIntro() {
