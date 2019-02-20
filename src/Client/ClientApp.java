@@ -73,7 +73,7 @@ public class ClientApp implements ISubscriber, Runnable {
             }
 
             // Basically a restart.
-            // Currently undesired as this "blocks" the program and prevents subsequent replies from coming in.
+            // Currently undesired as this "blocks" the program with 'scanner.nextLine()' and prevents subsequent replies from coming in.
             // awaitProductInput();
         }
     }
